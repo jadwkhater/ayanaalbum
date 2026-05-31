@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Album 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --rose:      #f2a7b8;
+  --rose-deep: #e07a94;
+  --blush:     #fde8ee;
+  --blush2:    #fcd5e2;
+  --peach:     #fde4d0;
+  --lavender:  #ecddf7;
+  --mint:      #d8f0e8;
+  --cream:     #fff8f5;
+  --white:     #ffffff;
+  --text:      #5a3a45;
+  --text2:     #9b6e7e;
+  --text3:     #c4a0ad;
+  --border:    rgba(242,167,184,0.3);
+  --border2:   rgba(242,167,184,0.6);
+  --shadow:    rgba(224,122,148,0.12);
+  --r:         14px;
+  --display:   'Playfair Display', Georgia, serif;
+  --body:      'Nunito', system-ui, sans-serif;
+}
+
+/* ── FLOATING HEARTS BG ── */
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23f2a7b8' d='M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+.hearts-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.heart-float {
+  position: absolute; bottom: -40px; opacity: 0;
+  animation: floatUp linear infinite;
+  font-size: 14px;
+  filter: blur(0.5px);
+}
+@keyframes floatUp {
+  0%   { transform: translateY(0) rotate(-10deg) scale(1);   opacity: 0; }
+  10%  { opacity: 0.4; }
+  90%  { opacity: 0.15; }
+  100% { transform: translateY(-110vh) rotate(15deg) scale(0.6); opacity: 0; }
+}
+
+/* ── AUTH GATE ── */
+#auth-gate {
+  display: none; min-height: 100vh;
+  align-items: center; justify-content: center;
+  flex-direction: column; text-align: center;
+  padding: 2rem; position: relative; z-index: 1;
+}
+#auth-gate.show { display: flex; }
+
+.gate-card {
+  background: var(--white);
+  border: 1.5px solid var(--border2);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 8px 40px var(--shadow), 0 2px 8px rgba(242,167,184,0.08);
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn {
+  from { transform: scale(0.85) translateY(20px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.gate-emoji { font-size: 52px; margin-bottom: 0.5rem; display: block; animation: heartbeat 1.8s ease-in-out infinite; }
+@keyframes heartbeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+.gate-title {
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.gate-title em { color: var(--rose-deep); font-style: normal; }
+.gate-sub { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 1.75rem; }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border2);
+  cursor: pointer;
+  transition: all 0.18s;
+  background: var(--white);
+  color: var(--text2);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:hover { border-color: var(--rose); color: var(--rose-deep); transform: translateY(-1px); box-shadow: 0 4px 14px var(--shadow); }
+.btn.primary {
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 18px rgba(224,122,148,0.35);
+}
+.btn.primary:hover { box-shadow: 0 6px 22px rgba(224,122,148,0.5); transform: translateY(-2px); }
+.btn.soft {
+  background: var(--blush);
+  color: var(--rose-deep);
+  border-color: var(--border2);
+}
+.btn.soft:hover { background: var(--blush2); }
+
+/* ── APP SHELL ── */
+#app-shell { display: none; position: relative; z-index: 1; }
+#app-shell.show { display: block; }
+
+/* ── HEADER ── */
+header {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+  padding: 1.1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 2px 20px var(--shadow);
+}
+.site-title {
+  font-family: var(--display);
+  font-size: 26px;
+  font-style: italic;
+  color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.site-title .hearts { font-style: normal; font-size: 18px; letter-spacing: -2px; }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ── DECO BANNER ── */
+.deco-banner {
+  background: linear-gradient(135deg, var(--blush) 0%, var(--lavender) 50%, var(--peach) 100%);
+  padding: 0.6rem 2rem;
+  display: flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap;
+  font-size: 12px; color: var(--text2); font-weight: 500;
+  border-bottom: 1.5px solid var(--border);
+  letter-spacing: 0.04em;
+}
+.deco-banner span { opacity: 0.7; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  background: var(--white);
+  padding: 0.85rem 2rem;
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  border-bottom: 1.5px solid var(--border);
+}
+.toolbar input[type=text] {
+  background: var(--blush);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-family: var(--body);
+  flex: 1; min-width: 160px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.toolbar input[type=text]:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(242,167,184,0.2); }
+.toolbar input[type=text]::placeholder { color: var(--text3); }
+select {
+  background: var(--blush);
+  border: 1.5px solid var(--border);
+  color: var(--text2);
+  padding: 8px 12px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-family: var(--body);
+  cursor: pointer; outline: none;
+  transition: border-color 0.15s;
+}
+select:focus { border-color: var(--rose); }
+
+/* ── FOLDER PILLS ── */
+.folder-bar {
+  padding: 0.8rem 2rem;
+  display: flex; gap: 8px; flex-wrap: wrap;
+  border-bottom: 1.5px solid var(--border);
+  background: var(--cream);
+}
+.pill {
+  font-family: var(--body);
+  font-size: 12px; font-weight: 600;
+  padding: 5px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border2);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+}
+.pill:hover { border-color: var(--rose); color: var(--rose-deep); transform: translateY(-1px); }
+.pill.active {
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color: white; border-color: transparent;
+  box-shadow: 0 3px 12px rgba(224,122,148,0.3);
+}
+.pill .cnt { opacity: 0.7; margin-left: 3px; font-size: 11px; }
+
+/* ── MAIN ── */
+main { padding: 1.5rem 2rem; }
+.count-bar { font-size: 12px; color: var(--text3); margin-bottom: 1.2rem; font-weight: 500; }
+
+/* ── GALLERY GRID ── */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.gallery.list { grid-template-columns: 1fr; }
+
+.photo-card {
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  position: relative;
+}
+.photo-card:hover {
+  transform: translateY(-4px) rotate(0.5deg);
+  box-shadow: 0 10px 30px var(--shadow);
+  border-color: var(--rose);
+}
+.photo-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--blush); }
+.photo-card .card-info { padding: 9px 11px 10px; background: var(--white); }
+.photo-card .card-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+.photo-card .card-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.photo-card .folder-badge {
+  position: absolute; top: 8px; left: 8px;
+  font-size: 10px; font-family: var(--body); font-weight: 700;
+  padding: 3px 10px; border-radius: 50px;
+  background: rgba(255,255,255,0.88); color: var(--rose-deep);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(242,167,184,0.4);
+}
+.photo-card .heart-overlay {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 16px; opacity: 0;
+  transition: opacity 0.2s;
+}
+.photo-card:hover .heart-overlay { opacity: 1; }
+
+/* LIST ROW */
+.list-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 11px 14px;
+  border-radius: var(--r);
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.list-row:hover { background: var(--blush); border-color: var(--rose); transform: translateX(3px); }
+.list-row img { width: 58px; height: 58px; object-fit: cover; border-radius: 10px; flex-shrink: 0; border: 1.5px solid var(--border); }
+.list-row .lr-info { flex: 1; min-width: 0; }
+.list-row .lr-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+.list-row .lr-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.list-row .lr-folder { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 50px; background: var(--blush); color: var(--rose-deep); border: 1px solid var(--border2); flex-shrink: 0; }
+
+/* ── UPLOAD MODAL ── */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(90,58,69,0.45);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  align-items: center; justify-content: center;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--white);
+  border: 1.5px solid var(--border2);
+  border-radius: 22px;
+  padding: 2rem 2rem 1.5rem;
+  width: min(500px, 92vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(224,122,148,0.18);
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+.modal-header h2 { font-family: var(--display); font-size: 22px; font-style: italic; font-weight: 400; }
+.modal p.modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 1.4rem; line-height: 1.6; }
+
+.drop-zone {
+  border: 2px dashed var(--border2);
+  border-radius: var(--r);
+  padding: 2.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 1rem;
+  background: var(--blush);
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--rose-deep);
+  background: var(--blush2);
+}
+.drop-zone .dz-icon { font-size: 38px; margin-bottom: 8px; }
+.drop-zone p { font-size: 14px; font-weight: 600; color: var(--text2); }
+.drop-zone span { font-size: 12px; color: var(--text3); margin-top: 4px; display: block; }
+input[type=file] { display: none; }
+
+.upload-preview { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+.up-thumb { position: relative; width: 72px; height: 72px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border2); }
+.up-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.up-thumb .rm { position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; background: rgba(90,58,69,0.75); border-radius: 50%; border: none; color: #fff; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.up-thumb .prog { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.3); }
+.up-thumb .prog-bar { height: 100%; background: var(--rose); transition: width 0.3s; }
+
+.field-row { display: flex; gap: 8px; align-items: center; margin-bottom: 1rem; }
+.field-row label { font-size: 13px; font-weight: 600; color: var(--text2); white-space: nowrap; }
+.field-row input {
+  flex: 1;
+  background: var(--blush);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-family: var(--body);
+  outline: none;
+}
+.field-row input:focus { border-color: var(--rose); }
+.field-row input::placeholder { color: var(--text3); }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1rem; }
+
+/* ── SETUP MODAL ── */
+.setup-step { margin-bottom: 1.4rem; padding: 1rem 1.2rem; background: var(--blush); border-radius: var(--r); border: 1px solid var(--border); }
+.setup-step h3 { font-size: 13px; font-weight: 700; color: var(--rose-deep); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+.setup-step p { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 8px; }
+.setup-step ol { padding-left: 18px; }
+.setup-step ol li { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.setup-step input {
+  width: 100%; padding: 8px 14px; border-radius: 50px;
+  border: 1.5px solid var(--border2); background: var(--white);
+  font-size: 13px; font-family: var(--body); color: var(--text); outline: none;
+}
+.setup-step input:focus { border-color: var(--rose); }
+
+/* ── LIGHTBOX ── */
+.lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(50,20,30,0.96);
+  z-index: 200;
+  flex-direction: column; align-items: center; justify-content: center;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 92vw; max-height: 76vh; object-fit: contain; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.lb-caption { color: rgba(255,220,230,0.75); font-size: 13px; margin-top: 14px; font-weight: 500; }
+.lb-close { position: absolute; top: 18px; right: 22px; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 20px; padding: 8px 12px; border-radius: 50px; cursor: pointer; transition: background 0.15s; line-height: 1; }
+.lb-close:hover { background: rgba(255,255,255,0.2); }
+.lb-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.08); border: none; color: #fff; font-size: 24px; padding: 14px 12px; cursor: pointer; border-radius: 10px; transition: background 0.15s; }
+.lb-arrow:hover { background: rgba(255,255,255,0.18); }
+.lb-prev { left: 16px; }
+.lb-next { right: 16px; }
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align: center; padding: 4rem 1rem; color: var(--text2); }
+.empty-state .icon { font-size: 52px; margin-bottom: 12px; animation: heartbeat 2s ease-in-out infinite; }
+.empty-state h3 { font-family: var(--display); font-size: 22px; font-style: italic; color: var(--text); margin-bottom: 8px; }
+.empty-state p { font-size: 14px; max-width: 320px; margin: 0 auto 1.5rem; line-height: 1.6; color: var(--text2); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--white);
+  border: 1.5px solid var(--border2);
+  border-radius: 16px;
+  padding: 14px 18px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text);
+  display: none; z-index: 300; min-width: 230px;
+  box-shadow: 0 8px 30px var(--shadow);
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.toast.show { display: block; }
+.toast-bar { height: 3px; background: var(--blush2); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.toast-fill { height: 100%; background: linear-gradient(90deg, var(--rose), var(--rose-deep)); border-radius: 2px; transition: width 0.3s; width: 0%; }
+</style>
+</head>
+<body>
+
+<!-- FLOATING HEARTS -->
+<div class="hearts-bg" id="hearts-bg"></div>
+
+<!-- AUTH GATE -->
+<div id="auth-gate">
+  <div class="gate-card">
+    <span class="gate-emoji">💕</span>
+    <div class="gate-title">Our Little <em>Album</em></div>
+    <p class="gate-sub">A private place for our photos, memories,<br>and all our favourite moments together 🌸</p>
+    <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+      <button class="btn primary" onclick="startAuth()" style="width:200px; justify-content:center;">
+        ✨ Open our album
+      </button>
+      <button class="btn" onclick="showSetup()" style="font-size:12px;">First time? Set up ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-shell">
+  <header>
+    <div class="site-title">
+      <span class="hearts">🌸</span>
+      Our Little Album
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="showSetup()" style="font-size:12px;">⚙</button>
+      <button class="btn soft" onclick="openUpload()">📷 Add photos</button>
+    </div>
+  </header>
+
+  <div class="deco-banner">
+    <span>🌸</span> every photo tells a story <span>·</span>
+    <span>💌</span> made with love <span>·</span>
+    <span>🌷</span> just for us <span>·</span>
+    <span>✨</span> our memories <span>🌸</span>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="🔍 Search our photos…" oninput="filterPhotos()">
+    <select id="sort-sel" onchange="filterPhotos()">
+      <option value="date-desc">💕 Newest first</option>
+      <option value="date-asc">🌱 Oldest first</option>
+      <option value="name">🔤 Name A–Z</option>
+      <option value="folder">📁 By album</option>
+    </select>
+    <button class="btn" id="btn-grid" onclick="setView('grid')">⊞</button>
+    <button class="btn" id="btn-list" onclick="setView('list')">☰</button>
+  </div>
+
+  <div class="folder-bar" id="folder-bar"></div>
+
+  <main>
+    <div class="count-bar" id="count-bar"></div>
+    <div id="gallery" class="gallery"></div>
+  </main>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="overlay" id="upload-overlay">
+  <div class="modal">
+    <div class="modal-header"><span style="font-size:22px;">📸</span><h2>Add new memories</h2></div>
+    <p class="modal-sub">Upload photos to your shared album — they'll appear for both of you instantly.</p>
+    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <div class="dz-icon">🌸</div>
+      <p>Click or drag & drop your photos here</p>
+      <span>JPEG · PNG · HEIC · GIF · WEBP · multiple files OK</span>
+    </div>
+    <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+    <div class="upload-preview" id="upload-preview"></div>
+    <div class="field-row">
+      <label>💌 Album:</label>
+      <input type="text" id="subfolder-input" placeholder="e.g. June, Beach day, Our walk…">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeUpload()">Cancel</button>
+      <button class="btn primary" onclick="uploadFiles()">Upload 💕</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP MODAL -->
+<div class="overlay" id="setup-overlay">
+  <div class="modal">
+    <div class="modal-header"><span style="font-size:22px;">⚙️</span><h2>Album setup</h2></div>
+    <p class="modal-sub">One-time setup to connect your Google Drive. Takes about 15 minutes!</p>
+    <div class="setup-step">
+      <h3>Step 1 — Google Drive folder ID</h3>
+      <p>Create a folder in Google Drive, share it with your partner's Google account, then copy the ID from the URL (the long string after /folders/).</p>
+      <input type="text" id="folder-id-input" placeholder="Paste folder ID here…">
+    </div>
+    <div class="setup-step">
+      <h3>Step 2 — Google OAuth Client ID</h3>
+      <p>Go to console.cloud.google.com → New Project → Enable Google Drive API → Create OAuth 2.0 credentials (Web Application). Add your GitHub Pages URL as an authorized redirect URI.</p>
+      <input type="text" id="client-id-input" placeholder="Paste OAuth Client ID here…" style="margin-top:8px;">
+    </div>
+    <div class="setup-step">
+      <h3>Step 3 — Share the link 🌸</h3>
+      <p>Host this file on GitHub Pages, send your partner the URL. She signs in with Google and can view and upload photos to your shared folder.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeSetup()">Close</button>
+      <button class="btn primary" onclick="saveSetup()">Save & connect 💕</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLb()">✕</button>
+  <button class="lb-arrow lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <button class="lb-arrow lb-next" onclick="lbNav(1)">&#8250;</button>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-caption" id="lb-cap"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-msg">Uploading…</span>
+  <div class="toast-bar"><div class="toast-fill" id="toast-fill"></div></div>
+</div>
+
+<script>
+// ── FLOATING HEARTS ──
+(function spawnHearts() {
+  const bg = document.getElementById('hearts-bg');
+  const symbols = ['♥','💕','🌸','💗','✿','💖','·'];
+  for (let i = 0; i < 22; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart-float';
+    h.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (10 + Math.random() * 14) + 'px';
+    h.style.animationDuration = (12 + Math.random() * 20) + 's';
+    h.style.animationDelay = (Math.random() * 18) + 's';
+    h.style.color = ['#f2a7b8','#e07a94','#ddb8e8','#f9c8d4','#fde8ee'][Math.floor(Math.random()*5)];
+    bg.appendChild(h);
+  }
+})();
+
+// ── CONFIG ──
+let CONFIG = {
+  clientId: localStorage.getItem('album_client_id') || '',
+  folderId: localStorage.getItem('album_folder_id') || '',
+};
+let accessToken = null;
+let allPhotos = [], filteredPhotos = [];
+let currentView = 'grid', currentFolder = 'all', lbIndex = 0;
+let pendingFiles = [];
+
+const SCOPES = 'https://www.googleapis.com/auth/drive';
+
+// ── AUTH ──
+function startAuth() {
+  if (!CONFIG.clientId || !CONFIG.folderId) { showSetup(); return; }
+  const p = new URLSearchParams({
+    client_id: CONFIG.clientId,
+    redirect_uri: window.location.origin + window.location.pathname,
+    response_type: 'token',
+    scope: SCOPES,
+    prompt: 'select_account'
+  });
+  window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${p}`;
+}
+
+function checkAuthCallback() {
+  const hash = new URLSearchParams(window.location.hash.slice(1));
+  const token = hash.get('access_token');
+  if (token) {
+    accessToken = token;
+    window.history.replaceState({}, document.title, window.location.pathname);
+    showApp(); loadPhotos(); return true;
+  }
+  return false;
+}
+
+function showApp() {
+  document.getElementById('auth-gate').classList.remove('show');
+  document.getElementById('app-shell').classList.add('show');
+}
+
+// ── DRIVE API ──
+async function driveReq(url, opts = {}) {
+  const res = await fetch(url, {
+    ...opts,
+    headers: { 'Authorization': `Bearer ${accessToken}`, ...(opts.headers||{}) }
+  });
+  if (!res.ok) throw new Error(`Drive API ${res.status}`);
+  return res.json();
+}
+
+async function loadPhotos() {
+  document.getElementById('gallery').innerHTML = `<div class="empty-state"><div class="icon">🌸</div><h3>Loading our memories…</h3></div>`;
+  try {
+    const imgQ = encodeURIComponent(`'${CONFIG.folderId}' in parents and mimeType contains 'image/' and trashed=false`);
+    const fields = 'files(id,name,mimeType,modifiedTime,thumbnailLink),nextPageToken';
+    let photos = []; let pt = '';
+    do {
+      const url = `https://www.googleapis.com/drive/v3/files?q=${imgQ}&fields=${fields}&pageSize=200&orderBy=modifiedTime%20desc${pt?'&pageToken='+pt:''}`;
+      const d = await driveReq(url);
+      photos = photos.concat(d.files||[]);
+      pt = d.nextPageToken||'';
+    } while(pt);
+
+    // load subfolders
+    const sfQ = encodeURIComponent(`'${CONFIG.folderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`);
+    const sfD = await driveReq(`https://www.googleapis.com/drive/v3/files?q=${sfQ}&fields=files(id,name)&pageSize=50`);
+    for (const sf of (sfD.files||[])) {
+      const q2 = encodeURIComponent(`'${sf.id}' in parents and mimeType contains 'image/' and trashed=false`);
+      const d2 = await driveReq(`https://www.googleapis.com/drive/v3/files?q=${q2}&fields=${fields}&pageSize=200`);
+      (d2.files||[]).forEach(f => { f._folder = sf.name; });
+      photos = photos.concat(d2.files||[]);
+    }
+
+    allPhotos = photos.map(f => ({
+      id: f.id, name: f.name,
+      folder: f._folder || 'Our photos',
+      modified: f.modifiedTime ? new Date(f.modifiedTime) : null,
+      thumb: f.thumbnailLink ? f.thumbnailLink.replace('=s220','=s400') : `https://drive.google.com/thumbnail?id=${f.id}&sz=w400`,
+      full: `https://drive.google.com/uc?export=view&id=${f.id}`
+    }));
+
+    buildFolderBar(); filterPhotos();
+  } catch(e) {
+    document.getElementById('gallery').innerHTML = `<div class="empty-state"><div class="icon">🌷</div><h3>Couldn't load photos</h3><p>${e.message}</p></div>`;
+  }
+}
+
+function buildFolderBar() {
+  const counts = {};
+  allPhotos.forEach(p => { counts[p.folder] = (counts[p.folder]||0)+1; });
+  const bar = document.getElementById('folder-bar');
+  bar.innerHTML = `<button class="pill ${currentFolder==='all'?'active':''}" onclick="setFolder('all',this)">🌸 All memories <span class="cnt">${allPhotos.length}</span></button>`;
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([name,cnt]) => {
+    const b = document.createElement('button');
+    b.className = 'pill'+(currentFolder===name?' active':'');
+    b.innerHTML = `💕 ${esc(name)} <span class="cnt">${cnt}</span>`;
+    b.onclick = function(){ setFolder(name,this); };
+    bar.appendChild(b);
+  });
+}
+
+function setFolder(name, el) {
+  currentFolder = name;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  filterPhotos();
+}
+
+function filterPhotos() {
+  const q = (document.getElementById('search')||{value:''}).value.toLowerCase();
+  const sort = (document.getElementById('sort-sel')||{value:'date-desc'}).value;
+  filteredPhotos = allPhotos.filter(p => {
+    return (currentFolder==='all'||p.folder===currentFolder) &&
+      (!q || p.name.toLowerCase().includes(q) || p.folder.toLowerCase().includes(q));
+  });
+  filteredPhotos.sort((a,b) => {
+    if(sort==='date-asc') return (a.modified||0)-(b.modified||0);
+    if(sort==='date-desc') return (b.modified||0)-(a.modified||0);
+    if(sort==='folder') return a.folder.localeCompare(b.folder);
+    return a.name.localeCompare(b.name);
+  });
+  const cnt = document.getElementById('count-bar');
+  if(cnt) cnt.textContent = `💗 ${filteredPhotos.length} photo${filteredPhotos.length!==1?'s':''} `;
+  renderGallery();
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('btn-grid').classList.toggle('active', v==='grid');
+  document.getElementById('btn-list').classList.toggle('active', v==='list');
+  renderGallery();
+}
+
+function renderGallery() {
+  const el = document.getElementById('gallery');
+  el.className = 'gallery'+(currentView==='list'?' list':'');
+  el.innerHTML = '';
+  if (!filteredPhotos.length) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">📷</div><h3>No photos yet</h3><p>Upload your first memory using the button above 🌸</p><button class="btn primary" onclick="openUpload()">📷 Add photos</button></div>`;
+    return;
+  }
+  filteredPhotos.forEach((p,i) => {
+    const date = p.modified ? p.modified.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
+    if (currentView==='list') {
+      const row = document.createElement('div');
+      row.className='list-row';
+      row.innerHTML=`<img src="${p.thumb}" alt="${esc(p.name)}" loading="lazy"><div class="lr-info"><div class="lr-name">${esc(p.name)}</div><div class="lr-meta">${date}</div></div><span class="lr-folder">💕 ${esc(p.folder)}</span>`;
+      row.onclick=()=>openLb(i); el.appendChild(row);
+    } else {
+      const card = document.createElement('div');
+      card.className='photo-card';
+      card.innerHTML=`<img src="${p.thumb}" alt="${esc(p.name)}" loading="lazy"><div class="folder-badge">💕 ${esc(p.folder)}</div><div class="heart-overlay">💗</div><div class="card-info"><div class="card-name">${esc(p.name)}</div><div class="card-meta">${date}</div></div>`;
+      card.onclick=()=>openLb(i); el.appendChild(card);
+    }
+  });
+}
+
+// ── UPLOAD ──
+function openUpload() { document.getElementById('upload-overlay').classList.add('open'); }
+function closeUpload() {
+  document.getElementById('upload-overlay').classList.remove('open');
+  pendingFiles = []; document.getElementById('upload-preview').innerHTML = '';
+  document.getElementById('subfolder-input').value = '';
+  document.getElementById('file-input').value = '';
+}
+
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', ()=>dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e=>{ e.preventDefault(); dz.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+function handleFiles(files) {
+  [...files].forEach(f => {
+    if (!f.type.startsWith('image/')) return;
+    const idx = pendingFiles.length;
+    pendingFiles.push(f);
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prev = document.getElementById('upload-preview');
+      const div = document.createElement('div');
+      div.className='up-thumb'; div.id=`thumb-${idx}`;
+      div.innerHTML=`<img src="${e.target.result}"><button class="rm" onclick="removePending(${idx})">✕</button><div class="prog"><div class="prog-bar" id="prog-${idx}" style="width:0%"></div></div>`;
+      prev.appendChild(div);
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+function removePending(i) {
+  pendingFiles[i]=null;
+  const el=document.getElementById(`thumb-${i}`);
+  if(el) el.remove();
+}
+
+async function uploadFiles() {
+  if (!accessToken) { alert('Please sign in first!'); return; }
+  const files = pendingFiles.filter(Boolean);
+  if (!files.length) { alert('Please select at least one photo 🌸'); return; }
+  const sub = document.getElementById('subfolder-input').value.trim();
+  let folderId = CONFIG.folderId;
+  if (sub) folderId = await getOrCreateSubfolder(sub);
+  closeUpload();
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  for (let i=0; i<files.length; i++) {
+    document.getElementById('toast-msg').textContent = `Uploading ${i+1} of ${files.length} 🌸`;
+    document.getElementById('toast-fill').style.width = `${Math.round((i/files.length)*100)}%`;
+    await uploadFile(files[i], folderId);
+  }
+  document.getElementById('toast-fill').style.width='100%';
+  document.getElementById('toast-msg').textContent=`Done! ${files.length} photo${files.length!==1?'s':''} added 💕`;
+  setTimeout(()=>{ toast.classList.remove('show'); loadPhotos(); }, 2200);
+}
+
+async function getOrCreateSubfolder(name) {
+  const q = encodeURIComponent(`'${CONFIG.folderId}' in parents and mimeType='application/vnd.google-apps.folder' and name='${name}' and trashed=false`);
+  const d = await driveReq(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)&pageSize=1`);
+  if (d.files && d.files.length) return d.files[0].id;
+  const c = await driveReq('https://www.googleapis.com/drive/v3/files', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ name, mimeType:'application/vnd.google-apps.folder', parents:[CONFIG.folderId] })
+  });
+  return c.id;
+}
+
+async function uploadFile(file, folderId) {
+  const meta = { name: file.name, parents: [folderId] };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(meta)], {type:'application/json'}));
+  form.append('file', file);
+  await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method:'POST', headers:{Authorization:`Bearer ${accessToken}`}, body: form
+  });
+}
+
+// ── SETUP ──
+function showSetup() {
+  document.getElementById('folder-id-input').value = CONFIG.folderId;
+  document.getElementById('client-id-input').value = CONFIG.clientId;
+  document.getElementById('setup-overlay').classList.add('open');
+}
+function closeSetup() { document.getElementById('setup-overlay').classList.remove('open'); }
+function saveSetup() {
+  const fid = document.getElementById('folder-id-input').value.trim();
+  const cid = document.getElementById('client-id-input').value.trim();
+  if (!fid||!cid) { alert('Both fields are required 🌸'); return; }
+  localStorage.setItem('album_folder_id', fid);
+  localStorage.setItem('album_client_id', cid);
+  CONFIG.folderId=fid; CONFIG.clientId=cid;
+  closeSetup();
+  document.getElementById('auth-gate').classList.add('show');
+  document.getElementById('app-shell').classList.remove('show');
+}
+
+// ── LIGHTBOX ──
+function openLb(i) {
+  lbIndex=i;
+  const p=filteredPhotos[i];
+  document.getElementById('lb-img').src=p.full;
+  document.getElementById('lb-cap').textContent=`💕 ${p.name} · ${p.folder}`;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLb() { document.getElementById('lightbox').classList.remove('open'); }
+function lbNav(d) { lbIndex=(lbIndex+d+filteredPhotos.length)%filteredPhotos.length; openLb(lbIndex); }
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeLb(); closeUpload(); closeSetup(); }
+  if(e.key==='ArrowRight') lbNav(1);
+  if(e.key==='ArrowLeft') lbNav(-1);
+});
+document.getElementById('lightbox').addEventListener('click', e=>{ if(e.target===document.getElementById('lightbox')) closeLb(); });
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── BOOT ──
+(function boot(){
+  if(checkAuthCallback()) return;
+  document.getElementById('auth-gate').classList.add('show');
+  if (!CONFIG.clientId||!CONFIG.folderId) setTimeout(showSetup, 500);
+})();
+</script>
+</body>
+</html>
